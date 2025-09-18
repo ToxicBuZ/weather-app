@@ -1,0 +1,16 @@
+/* Error text in red */
+.p-error {
+  color: #f44336; /* Material red 500 */
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+/* Red border on invalid input when touched or dirty */
+input.ng-invalid.ng-touched,
+input.ng-invalid.ng-dirty,
+.p-password-input.ng-invalid.ng-touched, /* For pPassword inputs */
+.p-password-input.ng-invalid.ng-dirty {
+  border-color: #f44336 !important;
+  box-shadow: 0 0 0 0.2rem rgba(244, 67, 54, 0.25);
+}

@@ -2,10 +2,18 @@
   <p-card styleClass="w-25rem overflow-hidden">
     <ng-template pTemplate="title">Weather App</ng-template>
     <ng-template pTemplate="subtitle">Welcome back</ng-template>
-    <div class="flex flex-column gap-3 mt-3">
+
+    <form [formGroup]="signInForm" class="flex flex-column gap-3 mt-3">
       <div>
         <label for="email" class="block mb-2">Email</label>
-        <input id="email" type="email" pInputText class="w-full" placeholder="Please enter your email" />
+        <input
+          id="email"
+          type="email"
+          pInputText
+          class="w-full"
+          placeholder="Please enter your email"
+          formControlName="username"
+        />
       </div>
       <div>
         <label for="password" class="block mb-2">Password</label>
@@ -17,9 +25,10 @@
           class="w-full"
           inputClass="w-full"
           placeholder="Please enter your password"
+          formControlName="password"
         />
       </div>
-    </div>
+    </form>
     <ng-template pTemplate="footer">
       <div class="flex flex-column gap-3 mt-3">
         <p-button label="Sign In" severity="primary" class="w-full" styleClass="w-full" (onClick)="onSignIn()" />

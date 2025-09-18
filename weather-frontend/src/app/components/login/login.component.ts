@@ -26,12 +26,12 @@ import { Router } from '@angular/router';
   styleUrl: './login.component.scss'
 })
 export class LoginComponent implements OnInit {
-  public form: FormGroup;
+  public signInForm: FormGroup;
 
   constructor(private formService: FormService,
     private router: Router
   ) {
-    this.form = this.formService.buildLoginForm();
+    this.signInForm = this.formService.buildSignInForm();
   }
 
   ngOnInit(): void {}

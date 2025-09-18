@@ -1,1 +1,121 @@
-<p>signup works!</p>
+<div class="flex justify-content-center align-items-center min-h-screen">
+  <p-card styleClass="w-25rem overflow-hidden">
+    <ng-template pTemplate="title">Sign Up</ng-template>
+    <ng-template pTemplate="subtitle">Create a new account</ng-template>
+
+    <form [formGroup]="signUpForm" class="flex flex-column gap-3 mt-3">
+      <div>
+        <label for="username" class="block mb-2">Username</label>
+        <input
+          id="username"
+          type="text"
+          pInputText
+          class="w-full"
+          placeholder="Enter your username"
+          formControlName="username"
+        />
+        <small class="p-error" *ngIf="signUpForm.get('username')?.invalid && (signUpForm.get('username')?.touched || signUpForm.get('username')?.dirty)">
+          Username is required.
+        </small>
+      </div>
+
+      <div>
+        <label for="email" class="block mb-2">Email</label>
+        <input
+          id="email"
+          type="email"
+          pInputText
+          class="w-full"
+          placeholder="Enter your email"
+          formControlName="email"
+        />
+        <small class="p-error" *ngIf="signUpForm.get('email')?.errors?.['required'] && (signUpForm.get('email')?.touched || signUpForm.get('email')?.dirty)">
+          Email is required.
+        </small>
+        <small class="p-error" *ngIf="signUpForm.get('email')?.errors?.['pattern'] && !(signUpForm.get('email')?.errors?.['required']) && (signUpForm.get('email')?.touched || signUpForm.get('email')?.dirty)">
+          Please enter a valid email.
+        </small>
+      </div>
+
+      <div>
+        <label for="firstName" class="block mb-2">First Name</label>
+        <input
+          id="firstName"
+          type="text"
+          pInputText
+          class="w-full"
+          placeholder="Enter your first name"
+          formControlName="firstName"
+        />
+        <small class="p-error" *ngIf="signUpForm.get('firstName')?.invalid && (signUpForm.get('firstName')?.touched || signUpForm.get('firstName')?.dirty)">
+          First name is required.
+        </small>
+      </div>
+
+      <div>
+        <label for="lastName" class="block mb-2">Last Name</label>
+        <input
+          id="lastName"
+          type="text"
+          pInputText
+          class="w-full"
+          placeholder="Enter your last name"
+          formControlName="lastName"
+        />
+        <small class="p-error" *ngIf="signUpForm.get('lastName')?.invalid && (signUpForm.get('lastName')?.touched || signUpForm.get('lastName')?.dirty)">
+          Last name is required.
+        </small>
+      </div>
+
+      <div>
+        <label for="password" class="block mb-2">Password</label>
+        <input
+          id="password"
+          type="password"
+          [feedback]="false"
+          pPassword
+          class="w-full"
+          inputClass="w-full"
+          placeholder="Enter your password"
+          formControlName="password"
+        />
+        <small class="p-error" *ngIf="signUpForm.get('password')?.errors?.['required'] && (signUpForm.get('password')?.touched || signUpForm.get('password')?.dirty)">
+          Password is required.
+        </small>
+        <small class="p-error" *ngIf="signUpForm.get('password')?.errors?.['pattern'] && !(signUpForm.get('password')?.errors?.['required']) && (signUpForm.get('password')?.touched || signUpForm.get('password')?.dirty)">
+          Password must meet the complexity requirements.
+        </small>
+      </div>
+
+      <div>
+        <label for="repeatPassword" class="block mb-2">Repeat Password</label>
+        <input
+          id="repeatPassword"
+          type="password"
+          [feedback]="false"
+          pPassword
+          class="w-full"
+          inputClass="w-full"
+          placeholder="Repeat your password"
+          formControlName="repeatPassword"
+        />
+        <small class="p-error" *ngIf="signUpForm.get('repeatPassword')?.errors?.['required'] && (signUpForm.get('repeatPassword')?.touched || signUpForm.get('repeatPassword')?.dirty)">
+          Please repeat your password.
+        </small>
+        <small class="p-error" *ngIf="signUpForm.get('repeatPassword')?.errors?.['matchOther'] && !(signUpForm.get('repeatPassword')?.errors?.['required']) && (signUpForm.get('repeatPassword')?.touched || signUpForm.get('repeatPassword')?.dirty)">
+          Passwords do not match.
+        </small>
+      </div>
+    </form>
+
+    <ng-template pTemplate="footer">
+      <div class="flex flex-column gap-3 mt-3">
+        <p-button label="Create Account" severity="primary" class="w-full" styleClass="w-full" />
+        <div class="text-center mt-2 flex gap-4 justify-content-between align-items-center">
+          <span>Already have an account?</span>
+          <p-button label="Sign In" severity="contrast" />
+        </div>
+      </div>
+    </ng-template>
+  </p-card>
+</div>
