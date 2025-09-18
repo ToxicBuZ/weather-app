@@ -1,0 +1,48 @@
+{
+  "root": true,
+  "ignorePatterns": ["projects/**/*", "dist", "node_modules"],
+  "overrides": [
+    {
+      "files": ["*.ts"],
+      "parserOptions": {
+        "project": ["tsconfig.json"]
+      },
+      "extends": [
+        "plugin:@angular-eslint/recommended",
+        "plugin:@angular-eslint/template/process-inline-templates"
+      ],
+      "rules": {
+        "max-len": [
+          "warn",
+          {
+            "code": 80,
+            "ignoreUrls": true,
+            "ignoreComments": true,
+            "ignoreStrings": true,
+            "ignoreTemplateLiterals": true
+          }
+        ],
+        "no-console": "warn",
+        "no-debugger": "error",
+        "quotes": ["error", "single"],
+        "semi": ["error", "always"],
+        "comma-dangle": ["error", "never"]
+      }
+    },
+    {
+      "files": ["*.html"],
+      "extends": ["plugin:@angular-eslint/template/recommended"],
+      "rules": {
+        "max-len": [
+          "warn",
+          {
+            "code": 120,
+            "ignoreComments": true,
+            "ignoreUrls": true
+          }
+        ],
+        "element-newline": "off"
+      }
+    }
+  ]
+}
