@@ -2,10 +2,9 @@
   <p-card styleClass="w-25rem overflow-hidden">
     <ng-template pTemplate="title">Sign Up</ng-template>
     <ng-template pTemplate="subtitle">Create a new account</ng-template>
-
     <form [formGroup]="signUpForm" class="flex flex-column gap-3 mt-3">
       <div>
-        <label for="username" class="block mb-2">Username</label>
+        <label for="username" class="block mb-2">* Username</label>
         <input
           id="username"
           type="text"
@@ -20,7 +19,7 @@
       </div>
 
       <div>
-        <label for="email" class="block mb-2">Email</label>
+        <label for="email" class="block mb-2">* Email</label>
         <input
           id="email"
           type="email"
@@ -38,7 +37,7 @@
       </div>
 
       <div>
-        <label for="firstName" class="block mb-2">First Name</label>
+        <label for="firstName" class="block mb-2">* First Name</label>
         <input
           id="firstName"
           type="text"
@@ -53,7 +52,7 @@
       </div>
 
       <div>
-        <label for="lastName" class="block mb-2">Last Name</label>
+        <label for="lastName" class="block mb-2">* Last Name</label>
         <input
           id="lastName"
           type="text"
@@ -68,7 +67,7 @@
       </div>
 
       <div>
-        <label for="password" class="block mb-2">Password</label>
+        <label for="password" class="block mb-2">* Password</label>
         <input
           id="password"
           type="password"
@@ -88,7 +87,7 @@
       </div>
 
       <div>
-        <label for="repeatPassword" class="block mb-2">Repeat Password</label>
+        <label for="repeatPassword" class="block mb-2">* Repeat Password</label>
         <input
           id="repeatPassword"
           type="password"
@@ -110,7 +109,7 @@
 
     <ng-template pTemplate="footer">
       <div class="flex flex-column gap-3 mt-3">
-        <p-button label="Create Account" severity="primary" class="w-full" styleClass="w-full" />
+        <p-button label="Create Account" severity="primary" class="w-full" styleClass="w-full" (onClick)="createAccount()"/>
         <div class="text-center mt-2 flex gap-4 justify-content-between align-items-center">
           <span>Already have an account?</span>
           <p-button label="Sign In" severity="contrast" />
@@ -119,3 +118,4 @@
     </ng-template>
   </p-card>
 </div>
+<p-toast></p-toast>
