@@ -1,5 +1,10 @@
-using weather_app;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using weather_app;
+using weather_app.Helpers;
+using weather_app.Models;
 using weather_app.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +24,9 @@ builder.Services.AddCors(options =>
 
 // Register application services
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<LoginService>();
+builder.Services.AddScoped<JwtGenerator>();
+builder.Services.AddSingleton(builder.Configuration.GetSection("JwtConfig").Get<JwtConfig>() ?? new JwtConfig());
 
 // Register DbContext with PostgreSQL provider
 builder.Services.AddDbContext<WeatherDbContext>(options =>
@@ -28,6 +36,31 @@ builder.Services.AddDbContext<WeatherDbContext>(options =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+var jwtConfig = builder.Configuration.GetSection("JwtConfig").Get<JwtConfig>();
+
+var secret = jwtConfig?.JwtSecretKey ?? string.Empty;
+
+builder.Services.AddAuthentication(option =>
+{
+    option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = "weather-app",
+        ValidAudience = "weather-app-user",
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret.ToString().ToCharArray())),
+        ClockSkew = TimeSpan.Zero // Optional: remove token expiration tolerance
+    };
+});
+
+
 
 var app = builder.Build();
 
@@ -42,6 +75,8 @@ if (app.Environment.IsDevelopment())
 app.UseCors("DefaultCorsPolicy");
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

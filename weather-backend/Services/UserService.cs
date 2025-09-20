@@ -23,6 +23,11 @@ namespace weather_app.Services
 
         public User Create(User user)
         {
+            // encrypt password here before saving to database
+            var salt = weather_api.Helpers.PasswordHasher.CreateSalt();
+            var hashedPassword = weather_api.Helpers.PasswordHasher.HashPassword(user.Password, salt);
+            user.Password = hashedPassword;
+            user.Salt = Convert.ToBase64String(salt);
             _dbContext.Users.Add(user);
             _dbContext.SaveChanges();
             return user;
