@@ -21,7 +21,7 @@ export class FormService {
     return this.formBuilder.group({
       username: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.pattern(RegexPattern.password)]],
-repeatPassword: ['', [Validators.required, matchOtherValidator('password')]],
+      repeatPassword: ['', [Validators.required, matchOtherValidator('password')]],
       email: ['', [Validators.required, Validators.pattern(RegexPattern.email)]],
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]]
