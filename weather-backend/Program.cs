@@ -25,8 +25,10 @@ builder.Services.AddCors(options =>
 // Register application services
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<LoginService>();
+builder.Services.AddHttpClient<WeatherService>();
 builder.Services.AddScoped<JwtGenerator>();
 builder.Services.AddSingleton(builder.Configuration.GetSection("JwtConfig").Get<JwtConfig>() ?? new JwtConfig());
+builder.Services.AddSingleton(builder.Configuration.GetSection("WeatherConfig").Get<WeatherConfig>() ?? new WeatherConfig());
 
 // Register DbContext with PostgreSQL provider
 builder.Services.AddDbContext<WeatherDbContext>(options =>
