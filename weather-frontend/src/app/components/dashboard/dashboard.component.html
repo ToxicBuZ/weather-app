@@ -1,1 +1,25 @@
-<p>dashboard works!</p>
+<div *ngIf="showSpinner" class="flex justify-content-center align-items-center min-h-screen">
+  <p-progress-spinner ariaLabel="loading" />
+</div>
+
+<div *ngIf="!showSpinner" class="flex justify-content-center align-items-center min-h-screen">
+  <p-card header="Simple Card">
+    <p-autocomplete
+      [(ngModel)]="selectedCity"
+      [suggestions]="filteredCities"
+      [dropdown]="true"
+      [virtualScroll]="true"
+      [virtualScrollItemSize]="34"
+      (completeMethod)="filterCity($event)"
+      (onSelect)="onCitySelect()"
+      optionLabel="name"
+    >
+      <ng-template let-city #item>
+        <div class="flex items-center gap-2">
+          <div>{{ city.country }} - {{ city.name }}</div>
+        </div>
+      </ng-template>
+    </p-autocomplete>
+  </p-card>
+</div>
+<p-toast />
