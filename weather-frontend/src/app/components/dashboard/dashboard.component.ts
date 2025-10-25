@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { firstValueFrom, Subscription } from 'rxjs';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { CommonModule } from '@angular/common';
@@ -10,7 +10,8 @@ import { MessageService } from 'primeng/api';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { Weather } from '../../models/weather.model';
 import { CardModule } from 'primeng/card';
-
+import { DividerModule } from 'primeng/divider';
+import { DataViewModule } from 'primeng/dataview';
 
 interface AutoCompleteCompleteEvent {
   originalEvent: Event;
@@ -19,12 +20,21 @@ interface AutoCompleteCompleteEvent {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, AutoCompleteModule, CardModule, ProgressSpinnerModule, ToastModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    AutoCompleteModule,
+    CardModule,
+    DividerModule,
+    DataViewModule,
+    ProgressSpinnerModule,
+    ToastModule
+  ],
   providers: [MessageService],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   public longitude!: number;
   public latitude!: number;
   public showSpinner: boolean = false;
@@ -32,11 +42,27 @@ export class DashboardComponent implements OnInit {
   public cities: City[] = [];
   public filteredCities: any[] = [];
   public currentWeather!: Weather;
+  public fiveDayWeather: Weather[] = [];
+  // instead of describing everypossible value and need to maintain later
+  public weatherIconMapper!: any;
+  public dayArray: string[] = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
   private subscriptions: Subscription;
 
   constructor(private messageService: MessageService, private weatherService: WeatherService) {
     this.subscriptions = new Subscription();
+    this.weatherIconMapper = {
+      'clear sky': 'wi-day-sunny text-orange-700',
+      'few clouds': 'wi-cloudy text-gray-500',
+      'scattered clouds': 'wi-cloud text-gray-600',
+      'broken clouds': 'wi-day-sunny-overcast text-gray-700',
+      'overcast clouds': 'wi-day-sunny-overcast text-orange-700',
+      'shower rain': 'wi-showers text-blue-200',
+      rain: 'wi-rain text-blue-400',
+      thunderstorm: 'wi-thunderstorm text-purple-500',
+      snow: 'wi-snow text-gray-400',
+      mist: 'wi-fog text-gray-900'
+    };
   }
 
   async ngOnInit() {
@@ -60,7 +86,6 @@ export class DashboardComponent implements OnInit {
               smallestDifference = differenceLat + differenceLat;
             }
           });
-          console.log(foundCity)
           this.selectedCity = foundCity;
         } else {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No data found.' });
@@ -74,13 +99,30 @@ export class DashboardComponent implements OnInit {
         .subscribe((response: Weather) => {
           if (response) {
             this.currentWeather = response;
-            console.log(this.currentWeather);
           } else {
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No current weather found.' });
           }
           this.showSpinner = false;
         })
     );
+    this.subscriptions.add(
+      this.weatherService
+        .getFiveDayWeather({ lon: this.longitude, lat: this.latitude } as Coordinate)
+        .subscribe((response: Weather[]) => {
+          if (response) {
+            const forecastStart = response[0].forecastDateTime.split('T')[1];
+            
+            this.fiveDayWeather = response.filter((f: Weather) => f.forecastDateTime.includes(forecastStart));
+          } else {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No five day weather found.' });
+          }
+          this.showSpinner = false;
+        })
+    );
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   public filterCity(event: AutoCompleteCompleteEvent) {
@@ -102,12 +144,26 @@ export class DashboardComponent implements OnInit {
       this.weatherService.getCurrentWeather(this.selectedCity.coord).subscribe((response: Weather) => {
         if (response) {
           this.currentWeather = response;
-          console.log(this.currentWeather);
         } else {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No current weather found.' });
         }
         this.showSpinner = false;
       })
     );
+    this.subscriptions.add(
+      this.weatherService.getFiveDayWeather(this.selectedCity.coord).subscribe((response: Weather[]) => {
+        if (response) {
+          const forecastStart = response[0].forecastDateTime.split('T')[1];
+          this.fiveDayWeather = response.filter((f: Weather) => f.forecastDateTime.includes(forecastStart));
+        } else {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No five day weather found.' });
+        }
+        this.showSpinner = false;
+      })
+    );
+  }
+
+  public getDay(weather: Weather): string {
+    return this.dayArray[new Date(weather.forecastDateTime).getDay()];
   }
 }

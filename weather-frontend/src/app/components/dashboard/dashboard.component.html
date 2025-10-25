@@ -2,24 +2,67 @@
   <p-progress-spinner ariaLabel="loading" />
 </div>
 
-<div *ngIf="!showSpinner" class="flex justify-content-center align-items-center min-h-screen">
-  <p-card header="Simple Card">
-    <p-autocomplete
-      [(ngModel)]="selectedCity"
-      [suggestions]="filteredCities"
-      [dropdown]="true"
-      [virtualScroll]="true"
-      [virtualScrollItemSize]="34"
-      (completeMethod)="filterCity($event)"
-      (onSelect)="onCitySelect()"
-      optionLabel="name"
-    >
-      <ng-template let-city #item>
-        <div class="flex items-center gap-2">
-          <div>{{ city.country }} - {{ city.name }}</div>
+<div
+  *ngIf="!showSpinner && selectedCity && currentWeather"
+  class="flex justify-content-center align-items-center min-h-screen"
+>
+  <p-card>
+    <div class="flex justify-content-between align-items-start gap-8 mb-4">
+      <div class="flex flex-column gap-2 align-items-start">
+        <label class="text-xl font-semibold">{{ selectedCity.name }}</label>
+        <p-autocomplete
+          [(ngModel)]="selectedCity"
+          [suggestions]="filteredCities"
+          [dropdown]="true"
+          [virtualScroll]="true"
+          [virtualScrollItemSize]="34"
+          (completeMethod)="filterCity($event)"
+          (onSelect)="onCitySelect()"
+          optionLabel="name"
+        >
+          <ng-template let-city #item>
+            <div class="flex items-center gap-2">
+              <div>{{ city.country }} - {{ city.name }}</div>
+            </div>
+          </ng-template>
+        </p-autocomplete>
+      </div>
+      <div class="flex flex-column align-items-center border-2 border-round-lg border-gray-200 p-2">
+        <div class="flex justify-content-between align-items-center gap-4">
+          <span class="text-4xl font-semibold">{{ currentWeather.temperature }}°C</span>
+          <i class="wi {{ weatherIconMapper[currentWeather.description] }} text-4xl font-semibold"></i>
         </div>
-      </ng-template>
-    </p-autocomplete>
+        <p-divider />
+        <div class="flex justify-content-between align-items-center font-semibold gap-4">
+          <span>
+            <span class="text-red-600">H:</span>
+            {{ currentWeather.maxTemperature }}
+          </span>
+          <span>
+            <span class="text-blue-600">L:</span>
+            {{ currentWeather.minTemperature }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="border-2 border-round-lg border-gray-200 p-2">
+      <ng-container *ngFor="let weather of fiveDayWeather; index as i;">
+        <div class="flex justify-content-between align-items-center w-12 p-4">
+          <div class="w-4 h-full flex font-semibold text-lg align-items-center justify-content-center">
+            {{ getDay(weather) }}
+          </div>
+          <div class="w-4 flex justify-content-center align-items-center">
+            <i class="wi {{ weatherIconMapper[weather.description] }} text-4xl font-semibold"></i>
+          </div>
+          <div class="flex gap-4 font-semibold text-xl w-4 align-items-center justify-content-center">
+            <span>{{ weather.maxTemperature }}°C</span>
+            <span class="text-blue-300">{{ weather.minTemperature }}°C</span>
+          </div>
+        </div>
+        <p-divider *ngIf="i !== fiveDayWeather.length - 1" />
+      </ng-container>
+    </div>
   </p-card>
 </div>
 <p-toast />

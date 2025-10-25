@@ -49,9 +49,7 @@ export class SignupComponent implements OnDestroy {
   }
 
   public createAccount(): void {
-    console.log('called');
     this.signUpForm.markAllAsTouched();
-    console.log(this.signUpForm.value);
 
     if (!this.signUpForm.valid) {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Please fill the form correctly' });

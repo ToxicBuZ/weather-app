@@ -12,5 +12,5 @@ export interface Weather {
   windDegree: number;
   country: string;
   city: string;
-  forecastDateTime: Date;
+  forecastDateTime: string;
 }
